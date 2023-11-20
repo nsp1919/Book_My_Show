@@ -6,6 +6,7 @@ import com.example.book_my_show.Repository.MovieRepository;
 import com.example.book_my_show.Repository.ShowRepository;
 import com.example.book_my_show.Repository.TheaterRepository;
 import com.example.book_my_show.RequestDTO.AddShowRequestDTO;
+import com.example.book_my_show.RequestDTO.ShowSeatRequestDTO;
 import com.example.book_my_show.Transformer.ShowTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,37 +43,41 @@ public class ShowService {
         return "Show has been added successfully with show ID "+shows1.getId();
     }
 
-    public String enableShowSeats(Integer showId) {
-        Shows shows=showRepository.findById(showId).get();
+    public String enableShowSeats(ShowSeatRequestDTO showSeatRequestDTO) {
+        Shows shows=showRepository.findById(showSeatRequestDTO.getShowId()).get();
         Theater theater=shows.getTheater();
         List<TheaterSeat>theaterSeatList=theater.getTheaterSeatList();
         List<ShowSeat>showSeatList=new ArrayList<>();
         for (TheaterSeat theaterSeat:theaterSeatList){
-            ShowSeat showSeat=new ShowSeat();
-            showSeat.setSeatNo(theaterSeat.getSeatNo());
-            showSeat.setSeatType(theaterSeat.getSeatType());
+            ShowSeat showSeat= ShowSeat.builder()
+                    .seatNo(theaterSeat.getSeatNo())
+                    .seatType(theaterSeat.getSeatType())
+                    .seatAvailable(true)
+                    .shows(shows)
+                    .price(0)
+                    .build();
 
-            switch (showSeat.getSeatType()){
+            switch (theaterSeat.getSeatType()){
                 case GOLD:
-                    showSeat.setPrice(200);
+                    showSeat.setPrice(showSeatRequestDTO.getPriceOfGoldSeats());
                     break;
                 case SILVER:
-                    showSeat.setPrice(150);
+                    showSeat.setPrice(showSeatRequestDTO.getPriceOfSilverSeats());
                     break;
                 case CLASSIC:
-                    showSeat.setPrice(100);
+                    showSeat.setPrice(showSeatRequestDTO.getPriceOfClassicSeats());
                     break;
                 case PREMIUM:
-                    showSeat.setPrice(250);
+                    showSeat.setPrice(showSeatRequestDTO.getPriceOfPremiumSeats());
                     break;
             }
-            showSeat.setSeatAvailable(true);
             showSeatList.add(showSeat);
-            showSeat.setShows(shows);
         }
 
         shows.setShowSeatList(showSeatList);
         showRepository.save(shows);
+
+        //We can save child also yo save child use showSeatRepository.saveall(showSeatList)
         return "shows are enabled";
     }
 }

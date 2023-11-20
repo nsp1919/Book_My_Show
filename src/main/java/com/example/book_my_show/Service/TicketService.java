@@ -12,8 +12,8 @@ import java.util.List;
 @Service
 public class TicketService {
 
-//    @Autowired
-//    TheaterRepository theaterRepository;
+    @Autowired
+    TheaterRepository theaterRepository;
 
     @Autowired
     UserRepository userRepository;
@@ -33,27 +33,48 @@ public class TicketService {
 
 
     public String bookTicket(BookTicketRequestDTO bookTicketRequestDTO) {
-        List<User> userList=userRepository.findByMobileNo(bookTicketRequestDTO.getMobileNo());
-        User user=userList.get(0);
-        Movie movie=movieRepository.findByName(bookTicketRequestDTO.getMovieName());
-//        Theater theater=theaterRepository.findById(bookTicketRequestDTO.getTheaterId()).get();
-        Ticket ticket=new Ticket();
-        ticket.setSeatNo(bookTicketRequestDTO.getSeatNo());
-        ShowSeat showSeat=showSeatRepository.findBySeatNo(bookTicketRequestDTO.getSeatNo());
-        Shows show=showRepository.findById(bookTicketRequestDTO.getShowId()).get();
-        ticket.setPrice(122);
-        ticket.setUser(user);
-        showSeat.setSeatAvailable(false);
-        showRepository.save(show);
-        ticketRepository.save(ticket);
-        user.getTicketList().add(ticket);
+        Shows shows = findRightShow(bookTicketRequestDTO);
+
+        //we got right show
+
+        User user = userRepository.findByMobileNo(bookTicketRequestDTO.getMobileNo());
 
 
+        List<ShowSeat> showSeatList = shows.getShowSeatList();
+        int totalPrice = 0;
+        for (ShowSeat showSeat : showSeatList) {
+            if (bookTicketRequestDTO.getSeatNumbers().contains(showSeat.getSeatNo())) {
+                showSeat.setSeatAvailable(false);
+                totalPrice+= showSeat.getPrice();
+            }
+        }
+            Ticket ticket = Ticket.builder()
+                    .price(totalPrice)
+                    .movieName(shows.getMovie().getName())
+                    .showDate(shows.getShowDate())
+                    .showTime(shows.getShowTime())
+                    .seatNo(bookTicketRequestDTO.getSeatNumbers().toString())
+                    .theaterAdress(shows.getTheater().getAddress())
+                    .show(shows)
+                    .user(user)
+                    .build();
+            shows.getTicketList().add(ticket);
+            user.getTicketList().add(ticket);
 
+            ticketRepository.save(ticket);
 
+            return "ticket booked";
 
-        String temp="Ticket booked "+ticket.getBookingId()+" for the movie "+movie.getName()+" show id "+show.getId();
-
-        return temp;
     }
-}
+
+
+        public Shows findRightShow (BookTicketRequestDTO bookTicketRequestDTO){
+            Movie movie = movieRepository.findByName(bookTicketRequestDTO.getMovieName());
+            Theater theater = theaterRepository.findById(bookTicketRequestDTO.getTheaterId()).get();
+
+            Shows shows = showRepository.findShowByShowTimeAndShowDateAndMovieAndTheater(bookTicketRequestDTO.getShowTime()
+                    , bookTicketRequestDTO.getShowDate(), movie, theater);
+
+            return shows;
+        }
+    }

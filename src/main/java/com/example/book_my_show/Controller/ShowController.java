@@ -4,6 +4,7 @@ package com.example.book_my_show.Controller;
 import com.example.book_my_show.Models.Shows;
 import com.example.book_my_show.Repository.ShowSeatRepository;
 import com.example.book_my_show.RequestDTO.AddShowRequestDTO;
+import com.example.book_my_show.RequestDTO.ShowSeatRequestDTO;
 import com.example.book_my_show.Service.ShowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,8 +34,8 @@ public class ShowController {
     }
 
     @PostMapping("/enable-show-seat")
-    public String enableShowSeats(@RequestParam("showId") Integer showId){
+    public String enableShowSeats(@RequestBody ShowSeatRequestDTO showSeatRequestDTO){
 
-        return showService.enableShowSeats(showId);
+        return showService.enableShowSeats(showSeatRequestDTO);
     }
 }

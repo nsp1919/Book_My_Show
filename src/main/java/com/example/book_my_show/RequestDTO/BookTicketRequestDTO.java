@@ -6,6 +6,10 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Setter
 @Getter
@@ -13,14 +17,18 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 public class BookTicketRequestDTO {
 
-//    Integer theaterId;
+    Integer theaterId;
 
     String movieName;
 
-    String seatNo;
+    List<String> seatNumbers;
 
     Integer mobileNo;
 
     Integer showId;
+
+    LocalDate showDate;
+
+    LocalTime showTime;
 
 }

@@ -24,7 +24,7 @@ public class ShowSeat {
     @Enumerated(value = EnumType.STRING)
     SeatType seatType;
 
-    double price;
+    int price;
 
     boolean seatAvailable;
 
