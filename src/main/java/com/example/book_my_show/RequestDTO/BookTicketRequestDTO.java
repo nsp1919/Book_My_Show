@@ -23,9 +23,7 @@ public class BookTicketRequestDTO {
 
     List<String> seatNumbers;
 
-    Integer mobileNo;
-
-    Integer showId;
+    String userId;
 
     LocalDate showDate;
 

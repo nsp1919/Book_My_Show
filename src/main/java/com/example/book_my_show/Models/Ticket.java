@@ -1,5 +1,6 @@
 package com.example.book_my_show.Models;
 
+import com.example.book_my_show.Enums.BookingStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -21,7 +22,7 @@ public class Ticket {
 
     double price;
 
-    String seatNo;
+    String bookedSeatNos;
 
     LocalDate showDate;
 
@@ -29,7 +30,14 @@ public class Ticket {
 
     String movieName;
 
+    String theaterName;
+
     String theaterAdress;
+
+    LocalDate bookedDate;
+
+    @Enumerated(value = EnumType.STRING)
+    BookingStatus bookingStatus;
 
     @ManyToOne
     @JoinColumn

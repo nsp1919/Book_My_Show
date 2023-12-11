@@ -1,8 +1,11 @@
 package com.example.book_my_show.Service;
 
+import com.example.book_my_show.Enums.BookingStatus;
 import com.example.book_my_show.Enums.SeatType;
+import com.example.book_my_show.Models.Shows;
 import com.example.book_my_show.Models.Theater;
 import com.example.book_my_show.Models.TheaterSeat;
+import com.example.book_my_show.Models.Ticket;
 import com.example.book_my_show.Repository.TheaterRepository;
 import com.example.book_my_show.Repository.TheaterSeatRepository;
 import com.example.book_my_show.RequestDTO.TheaterRequestDTO;
@@ -119,5 +122,19 @@ public class TheaterService {
 
 
 
+    }
+
+    public int revenueFromTheater(Integer theaterId) {
+        Theater theater=theaterRepository.findById(theaterId).get();
+        List<Shows>showsList=theater.getShowsList();
+        int revenueByTheater=0;
+        for (Shows shows:showsList){
+            List<Ticket>ticketList=shows.getTicketList();
+            for (Ticket ticket:ticketList){
+                if (ticket.getBookingStatus().equals(BookingStatus.CONFIRMED))
+                revenueByTheater+=ticket.getPrice();
+            }
+        }
+        return revenueByTheater;
     }
 }

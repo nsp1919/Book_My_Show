@@ -18,7 +18,6 @@ public class ShowSeat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
-    @Column(unique = true)
     String seatNo;
 
     @Enumerated(value = EnumType.STRING)
@@ -26,7 +25,9 @@ public class ShowSeat {
 
     int price;
 
-    boolean seatAvailable;
+    boolean isSeatAvailable;
+
+    boolean isFoodAvailable;
 
     @ManyToOne
     @JoinColumn

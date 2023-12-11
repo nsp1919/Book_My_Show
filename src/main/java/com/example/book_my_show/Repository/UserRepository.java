@@ -7,5 +7,14 @@ import java.util.List;
 
 public interface UserRepository extends JpaRepository<User,Integer> {
 
-    User findByMobileNo(Integer mobileNum);
+    User findByMobileNo(String mobileNum);
+    User findByMailId(String mailId);
+
+    User findByUserId(String userId);
+
+    boolean existsByMailId(String mail);
+
+    boolean existsByMobileNo(String MobileNo);
+
+    boolean existsByUserId(String UserId);
 }

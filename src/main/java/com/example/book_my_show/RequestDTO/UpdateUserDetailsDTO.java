@@ -9,15 +9,10 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class AddUserRequestDTO {
+public class UpdateUserDetailsDTO {
     String userId;
-
-    String mobileNo;
 
     String name;
 
     String address;
-
-    String mailId;
 }

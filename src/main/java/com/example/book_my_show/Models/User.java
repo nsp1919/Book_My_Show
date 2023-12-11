@@ -1,6 +1,8 @@
 package com.example.book_my_show.Models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -20,7 +22,10 @@ public class User {
     Integer id;
 
     @Column(unique = true)
-    int mobileNo;
+    String userId;
+
+    @Column(unique = true)
+    String mobileNo;
 
     String name;
 
@@ -31,4 +36,6 @@ public class User {
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     List<Ticket> ticketList=new ArrayList<>();
+
+
 }
